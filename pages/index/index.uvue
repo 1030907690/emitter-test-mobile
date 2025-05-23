@@ -1,10 +1,10 @@
 <template>
 	<view>
-		
+
 		<image class="logo" src="/static/logo.png"></image>
 		<view class="text-area">
 			<text class="title">{{title}}</text>
-			
+
 		</view>
 	</view>
 </template>
@@ -12,34 +12,33 @@
 
 <script setup lang="uts">
 	let title = ref<string>("hello")
-	onMounted(()=>{
+	onMounted(() => {
 		console.log("onMounted")
 		startStream()
 	})
-	
-const startStream = () => {
-    const requestTask = wx.request({
-      url: 'http://127.0.0.1:8080/api/index/chat', // 后端接口地址
-      method: 'GET',
-      // dataType: 'text',
-      //responseType: 'stream', // 关键：设置响应类型为 stream
-	  enableChunked: true,
-      success: (res) => {
-        
-      },
-      fail: (err) => {
-        console.error("请求失败:", err);
-      }
-    });
-	const decoder = new TextDecoder('utf-8');
 
-	 requestTask.onChunkReceived(function (resp) {
-		 let data = decoder.decode(resp.data)
-	            console.log(data)
-	            title.value += data
-	        });
-  }
-	
+	const startStream = () => {
+		const requestTask = wx.request({
+			url: 'http://127.0.0.1:8080/api/index/chat', // 后端接口地址
+			method: 'GET',
+			// dataType: 'text',
+			//responseType: 'stream', // 关键：设置响应类型为 stream
+			enableChunked: true,
+			success: (res) => {
+
+			},
+			fail: (err) => {
+				console.error("请求失败:", err);
+			}
+		});
+		const decoder = new TextDecoder('utf-8');
+
+		requestTask.onChunkReceived(function (resp) {
+			let data = decoder.decode(resp.data)
+			console.log(data)
+			title.value += data
+		});
+	}
 </script>
 
 <style>
@@ -52,6 +51,6 @@ const startStream = () => {
 	.title {
 		font-size: 18px;
 		color: #8f8f94;
-    text-align: center;
+		text-align: center;
 	}
 </style>
